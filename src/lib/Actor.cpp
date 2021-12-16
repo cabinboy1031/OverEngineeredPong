@@ -6,12 +6,12 @@ Actor::Actor():m_RenderComponent(new NullRenderComponent())
               ,m_PhysicsComponent(new NullPhysicsComponent())
               ,m_ColliderComponent(new NullCollisionComponent()) {}
 
-Actor::Actor(RenderComponent& mesh,
-             PhysicsComponent& model,
-             CollisionComponent& collider)
-    :m_RenderComponent(&mesh)
-    ,m_PhysicsComponent(&model)
-    ,m_ColliderComponent(&collider) {}
+Actor::Actor(RenderComponent* mesh,
+             PhysicsComponent* model,
+             CollisionComponent* collider)
+    :m_RenderComponent(mesh)
+    ,m_PhysicsComponent(model)
+    ,m_ColliderComponent(collider) {}
 
 Actor::~Actor(){
     delete m_PhysicsComponent;

@@ -16,9 +16,9 @@ namespace Violet {
         class Actor {
                 public:
                         Actor();
-                        Actor(RenderComponent& mesh,
-                              PhysicsComponent& model,
-                              CollisionComponent& collider);
+                        Actor(RenderComponent* mesh,
+                              PhysicsComponent* model,
+                              CollisionComponent* collider);
                         virtual ~Actor();
 
                         /**
