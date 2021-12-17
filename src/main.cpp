@@ -23,13 +23,19 @@ int main(int argc, char *argv[]) {
         //----------------------------------------------------------------------------------
         // TODO: Update your variables here
         //----------------------------------------------------------------------------------
+        if(IsKeyDown('W')){
+            playerPaddle->translate(Vector3({0,-5,0}));
+        }
+        if(IsKeyDown('S')){
+            playerPaddle->translate(Vector3({0,5,0}));
+        }
+        playerPaddle->update();
 
         // Draw
         //----------------------------------------------------------------------------------
         BeginDrawing();
 
             ClearBackground(RAYWHITE);
-            playerPaddle->update();
             playerPaddle->getRenderComponent().draw();
 
 
