@@ -11,6 +11,9 @@ namespace Violet {
             virtual ~CollisionComponent(){}
 
             virtual void update(Actor& actor) = 0;
+            bool isColliding(){return m_IsColliding;}
+        protected:
+            bool m_IsColliding = false;
     };
 
     class NullCollisionComponent:public CollisionComponent{

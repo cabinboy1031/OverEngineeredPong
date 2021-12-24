@@ -1,10 +1,11 @@
 #include <iostream>
+#include <vector>
 #include <raylib.h>
 #include "Paddle.hpp"
+#include "Ball.hpp"
 
 using namespace std;
 int main(int argc, char *argv[]) {
-    Violet::Actor* playerPaddle = createPaddleActor(40, 40);
 
 // Initialization
     //--------------------------------------------------------------------------------------
@@ -12,9 +13,19 @@ int main(int argc, char *argv[]) {
     const int screenHeight = 450;
 
     InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
+    std::vector<Violet::Actor*> levelObjects = {
+    createPaddleActor(40, 40, new Paddle),
+    createPaddleActor(screenWidth - 60, 40),
+    createBallActor(screenWidth/2,screenHeight/2)
+};
 
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------
+    //
+    // Actor and game setup
+    for(Violet::Actor* object: levelObjects){
+        object->getBehaviorComponent().setup();
+    }
 
     // Main game loop
     while (!WindowShouldClose())    // Detect window close button or ESC key
@@ -23,23 +34,21 @@ int main(int argc, char *argv[]) {
         //----------------------------------------------------------------------------------
         // TODO: Update your variables here
         //----------------------------------------------------------------------------------
-        if(IsKeyDown('W')){
-            playerPaddle->translate(Vector3({0,-5,0}));
+        for(Violet::Actor* object: levelObjects){
+            object->update();
         }
-        if(IsKeyDown('S')){
-            playerPaddle->translate(Vector3({0,5,0}));
-        }
-        playerPaddle->update();
 
         // Draw
         //----------------------------------------------------------------------------------
         BeginDrawing();
 
-            ClearBackground(RAYWHITE);
-            playerPaddle->getRenderComponent().draw();
+            ClearBackground(BLACK);
+            for(Violet::Actor* object: levelObjects){
+                object->getRenderComponent().draw();
+            }
 
-
-            DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
+            DrawText("11", (screenWidth/2) - 40, 10, 20, RAYWHITE);
+            DrawText("12", (screenWidth/2) + 20, 10, 20, RAYWHITE);
 
         EndDrawing();
         //----------------------------------------------------------------------------------

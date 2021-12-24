@@ -11,6 +11,7 @@
 #include "util/Rendering.hpp"
 #include "util/Physics.hpp"
 #include "util/Collision.hpp"
+#include "util/ActorBehavior.hpp"
 
 namespace Violet {
         class Actor {
@@ -51,6 +52,7 @@ namespace Violet {
                         virtual void setRenderComponent(RenderComponent& mesh);
                         virtual void setPhysicsComponent(PhysicsComponent& model);
                         virtual void setColliderComponent(CollisionComponent& collider);
+                        virtual void setBehaviorComponent(ActorBehavior& behavior);
 
                         /**
                          * using components in a specific object
@@ -61,14 +63,22 @@ namespace Violet {
                         inline virtual PhysicsComponent& getPhysicsComponent() const { return *m_PhysicsComponent; }
                         inline virtual CollisionComponent& getCollisionComponent() { return *m_ColliderComponent; }
                         inline virtual CollisionComponent& getCollisionComponent() const { return *m_ColliderComponent; }
+                        inline virtual ActorBehavior& getBehaviorComponent() const {return *m_ActorBehaviorComponent; }
+
+                        Actor* create(){
+                                Actor* newActor = new Actor();
+                                return newActor;
+                        };
                 protected:
                         RenderComponent *m_RenderComponent;
                         PhysicsComponent *m_PhysicsComponent;
                         CollisionComponent *m_ColliderComponent;
+                        ActorBehavior *m_ActorBehaviorComponent;
 
                         Vector3 m_Position;
                         Vector4 m_Rotation;
                         Vector3 m_Scale;
+
         };
 }
 

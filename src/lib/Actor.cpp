@@ -4,19 +4,22 @@ using namespace Violet;
 
 Actor::Actor():m_RenderComponent(new NullRenderComponent())
               ,m_PhysicsComponent(new NullPhysicsComponent())
-              ,m_ColliderComponent(new NullCollisionComponent()) {}
+              ,m_ColliderComponent(new NullCollisionComponent())
+              ,m_ActorBehaviorComponent(new NullActorBehavior()){}
 
 Actor::Actor(RenderComponent* mesh,
              PhysicsComponent* model,
              CollisionComponent* collider)
     :m_RenderComponent(mesh)
     ,m_PhysicsComponent(model)
-    ,m_ColliderComponent(collider) {}
+    ,m_ColliderComponent(collider)
+    ,m_ActorBehaviorComponent(new NullActorBehavior()){}
 
 Actor::~Actor(){
     delete m_PhysicsComponent;
     delete m_RenderComponent;
     delete m_ColliderComponent;
+    delete m_ActorBehaviorComponent;
 
 }
 
@@ -24,9 +27,10 @@ Actor::~Actor(){
  * Update components and pass in arguments
  * */
 void Actor::update(){
-    m_RenderComponent->update(*this);
     m_PhysicsComponent->update(*this);
     m_ColliderComponent->update(*this);
+    m_ActorBehaviorComponent->update(*this);
+    m_RenderComponent->update(*this);
 }
 
 /**
@@ -77,4 +81,9 @@ void Actor::setPhysicsComponent(PhysicsComponent& model){
 void Actor::setColliderComponent(CollisionComponent& collider){
     delete m_ColliderComponent;
     m_ColliderComponent = &collider;
+}
+
+void Actor::setBehaviorComponent(ActorBehavior &behavior){
+    delete m_ActorBehaviorComponent;
+    m_ActorBehaviorComponent = &behavior;
 }
