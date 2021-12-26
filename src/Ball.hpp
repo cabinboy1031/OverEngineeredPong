@@ -27,19 +27,19 @@ class CircleCollisionComponent: public Violet::CollisionComponent{
 class Ball: public Violet::ActorBehavior{
     public:
     void setup(){
-      m_XVel = 5.0f;
-      m_YVel = 5.0f;
+      m_XVel = 200.0f;
+      m_YVel = 200.0f;
     }
     void update(Violet::Actor& actor){
       Vector3 position = actor.get_position();
 
-      if(position.x >= GetScreenWidth() || position.x <= 0){
+      if(position.x + 5>= GetScreenWidth() || position.x - 5 <= 0){
         m_XVel = -m_XVel;
       }
-      if(position.y >= GetScreenHeight() || position.y <= 0){
+      if(position.y + 5 >= GetScreenHeight() || position.y - 5  <= 0){
         m_YVel = -m_YVel;
       }
-      actor.set_position({position.x + m_XVel,position.y + m_YVel, 0});
+      actor.set_position({position.x + (m_XVel * GetFrameTime()),position.y + (m_YVel * GetFrameTime()), 0});
 
     if(actor.getCollisionComponent().isColliding()){
       m_XVel = -m_XVel;

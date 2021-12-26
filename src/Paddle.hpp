@@ -49,10 +49,6 @@ class Paddle: public Violet::ActorBehavior {
             if((position.y < 0)){
                 object.set_position({position.x, 0, position.z });
             }
-
-            if(object.getCollisionComponent().isColliding()){
-
-            }
         }
 
 
