@@ -24,7 +24,7 @@ int main(int argc, char *argv[]) {
     //
     // Actor and game setup
     for(Violet::Actor* object: levelObjects){
-        object->getBehaviorComponent().setup();
+        dynamic_cast<Violet::ActorBehavior&>(object->getComponent("behaviorComponent")).setup();
     }
 
     // Main game loop
@@ -44,7 +44,7 @@ int main(int argc, char *argv[]) {
 
             ClearBackground(BLACK);
             for(Violet::Actor* object: levelObjects){
-                object->getRenderComponent().draw();
+                dynamic_cast<Violet::RenderComponent&>(object->getComponent("renderComponent")).draw();
             }
 
             DrawText("11", (screenWidth/2) - 40, 10, 20, RAYWHITE);

@@ -2,44 +2,32 @@
 using namespace Violet;
 #include <iostream>
 
-Actor::Actor():m_RenderComponent(new NullRenderComponent())
-              ,m_PhysicsComponent(new NullPhysicsComponent())
-              ,m_ColliderComponent(new NullCollisionComponent())
-              ,m_ActorBehaviorComponent(new NullActorBehavior()){}
-
-Actor::Actor(RenderComponent* mesh,
-             PhysicsComponent* model,
-             CollisionComponent* collider)
-    :m_RenderComponent(mesh)
-    ,m_PhysicsComponent(model)
-    ,m_ColliderComponent(collider)
-    ,m_ActorBehaviorComponent(new NullActorBehavior()){}
-
-Actor::~Actor(){
-    delete m_PhysicsComponent;
-    delete m_RenderComponent;
-    delete m_ColliderComponent;
-    delete m_ActorBehaviorComponent;
-
+Actor::Actor() {
+    m_Transform =
+        {{0,0,0},
+         {0,0,0,0},
+         {1,1,1}};
 }
 
 /**
  * Update components and pass in arguments
  * */
 void Actor::update(){
-    m_PhysicsComponent->update(*this);
-    m_ColliderComponent->update(*this);
-    m_ActorBehaviorComponent->update(*this);
-    m_RenderComponent->update(*this);
+    for(std::pair<const char*, Component*> componentPair: m_ComponentList){
+        componentPair.second->update(*this);
+    }
 }
 
 /**
  * relative translations
  * */
 void Actor::translate(Vector3 vec){
-    m_Position.x += vec.x;
-    m_Position.y += vec.y;
-    m_Position.z += vec.z;
+    Vector3 position = m_Transform.translation;
+    position.x += vec.x;
+    position.y += vec.y;
+    position.z += vec.z;
+
+    m_Transform.translation = position;
 }
 void Actor::rotate(Vector3 vec){
     /**
@@ -49,41 +37,30 @@ void Actor::rotate(Vector3 vec){
      std::cerr << "ERROR: Not implemented yet" << std::endl;
 }
 void Actor::scale(Vector3 vec){
-    m_Scale.x += vec.x;
-    m_Scale.y += vec.y;
-    m_Scale.z += vec.z;
+    Vector3 scale = m_Transform.scale;
+    scale.x += vec.x;
+    scale.y += vec.y;
+    scale.z += vec.z;
+
+    m_Transform.scale = scale;
 }
 /**
  * world coordinate translations
  * */
-void Actor::set_position(Vector3 vec){ m_Position = vec; }
-void Actor::set_rotation(Vector4 vec){m_Rotation = vec; }
-void Actor::set_scale(Vector3 vec){ m_Scale = vec; }
+void Actor::setPosition(Vector3 vec){ m_Transform.translation = vec; }
+void Actor::setRotation(Vector4 vec){m_Transform.rotation = vec; }
+void Actor::setScale(Vector3 vec){ m_Transform.scale = vec; }
 /**
  * position accessors
  * */
-Vector3 Actor::get_position() const { return m_Position; }
-Vector4 Actor::get_rotation() const{ return m_Rotation; }
-Vector3 Actor::get_scale() const{ return m_Scale; }
+Transform& Actor::getTransform() {return m_Transform;}
+Transform Actor::getTransform() const {return m_Transform;}
+Vector3 Actor::getPosition() const { return getTransform().translation; }
+Quaternion Actor::getRotation() const{ return getTransform().rotation; }
+Vector3 Actor::getScale() const{ return getTransform().scale; }
 
-/**
- * swapping out components
- * */
-void Actor::setRenderComponent(RenderComponent& mesh){
-    delete m_RenderComponent;
-    m_RenderComponent = &mesh;
-}
 
-void Actor::setPhysicsComponent(PhysicsComponent& model){
-    delete m_PhysicsComponent;
-    m_PhysicsComponent = &model;
-}
-void Actor::setColliderComponent(CollisionComponent& collider){
-    delete m_ColliderComponent;
-    m_ColliderComponent = &collider;
-}
-
-void Actor::setBehaviorComponent(ActorBehavior &behavior){
-    delete m_ActorBehaviorComponent;
-    m_ActorBehaviorComponent = &behavior;
+void Actor::setComponent(const char* componentName, Component* component){
+    delete m_ComponentList[componentName];
+    m_ComponentList[componentName] = component;
 }

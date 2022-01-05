@@ -33,6 +33,8 @@ endif()
 add_executable(${PROJECT_NAME}
   src/main.cpp
   src/lib/Actor.cpp
+  src/lib/Rendering/Rendering.cpp
+  src/lib/Rendering/RenderComponent.cpp
   )
 #set(raylib_VERBOSE 1)
 target_link_libraries(${PROJECT_NAME} raylib)

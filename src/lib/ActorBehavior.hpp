@@ -8,11 +8,11 @@
  *   - behaves to events
  *   Physics/Rendering/Collision may be allowed to be modified through classes using this interface.
  **/
+ #include "Component.hpp"
 
 
 namespace Violet {
-  class Actor;
-  class ActorBehavior{
+  class ActorBehavior: public Component{
     public:
       virtual ~ActorBehavior() {}
       virtual void setup(){}

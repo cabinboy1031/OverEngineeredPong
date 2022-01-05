@@ -6,78 +6,60 @@
  * TODO Actors will also store its physics state which allows for velocity and momentum to be set.
  * TODO Actors will also have the ability to carry a list of components that are accessible through tag
  * */
+#include <map>
 #include <raylib.h>
 
-#include "util/Rendering.hpp"
-#include "util/Physics.hpp"
-#include "util/Collision.hpp"
-#include "util/ActorBehavior.hpp"
+#include "Rendering/Rendering.hpp"
+#include "ActorBehavior.hpp"
 
 namespace Violet {
         class Actor {
                 public:
                         Actor();
-                        Actor(RenderComponent* mesh,
-                              PhysicsComponent* model,
-                              CollisionComponent* collider);
-                        virtual ~Actor();
+                        ~Actor();
 
                         /**
                         * Update components and pass in arguments
                         * */
-                        virtual void update();
+                        void update();
 
                         /**
                          * relative translations
                          * */
-                        virtual void translate(Vector3 vec);
-                        virtual void rotate(Vector3 vec);
-                        virtual void scale(Vector3 vec);
+                        void translate(Vector3 vec);
+                        void rotate(Vector3 vec);
+                        void scale(Vector3 vec);
                         /**
                          * world coordinate translations
                          * */
-                        virtual void set_position(Vector3 vec);
-                        virtual void set_rotation(Vector4 vec);
-                        virtual void set_scale(Vector3 vec);
+                        void setPosition(Vector3 vec);
+                        void setRotation(Vector4 vec);
+                        void setScale(Vector3 vec);
                         /**
                          * position accessors
                          * */
-                        virtual Vector3 get_position() const;
-                        virtual Vector4 get_rotation() const;
-                        virtual Vector3 get_scale() const;
+                        Transform& getTransform();
+                        Transform getTransform() const;
+                        Vector3 getPosition() const;
+                        Quaternion getRotation() const;
+                        Vector3 getScale() const;
 
                         /**
-                         * swapping out components
+                         * Sets and resets components.
+                         * If component exists at that name, deletes the old component.
                          * */
-                        virtual void setRenderComponent(RenderComponent& mesh);
-                        virtual void setPhysicsComponent(PhysicsComponent& model);
-                        virtual void setColliderComponent(CollisionComponent& collider);
-                        virtual void setBehaviorComponent(ActorBehavior& behavior);
+                        void setComponent(const char* componentName, Component* component);
+                        Component& getComponent(const char* componentName){ return *m_ComponentList[componentName];}
 
-                        /**
-                         * using components in a specific object
-                         * */
-                        inline virtual RenderComponent& getRenderComponent() { return *m_RenderComponent; }
-                        inline virtual RenderComponent& getRenderComponent() const { return *m_RenderComponent; }
-                        inline virtual PhysicsComponent& getPhysicsComponent() { return *m_PhysicsComponent; }
-                        inline virtual PhysicsComponent& getPhysicsComponent() const { return *m_PhysicsComponent; }
-                        inline virtual CollisionComponent& getCollisionComponent() { return *m_ColliderComponent; }
-                        inline virtual CollisionComponent& getCollisionComponent() const { return *m_ColliderComponent; }
-                        inline virtual ActorBehavior& getBehaviorComponent() const {return *m_ActorBehaviorComponent; }
 
                         Actor* create(){
                                 Actor* newActor = new Actor();
                                 return newActor;
                         };
                 protected:
-                        RenderComponent *m_RenderComponent;
-                        PhysicsComponent *m_PhysicsComponent;
-                        CollisionComponent *m_ColliderComponent;
-                        ActorBehavior *m_ActorBehaviorComponent;
+                        std::map<const char*,Component*> m_ComponentList;
 
-                        Vector3 m_Position;
-                        Vector4 m_Rotation;
-                        Vector3 m_Scale;
+                        Transform m_Transform;
 
         };
 }
